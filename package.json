@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./app/server.js",
-    "build": "tsc -w",
+    "build": "rm -rf ./dist && tsc",
     "dev": "concurrently \"tsc -w\" \"nodemon ./dist/server.js\""
   },
   "keywords": [],
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongoose": "^6.9.1"
   }
 }

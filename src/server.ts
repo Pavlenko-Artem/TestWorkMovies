@@ -1,8 +1,11 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import { connectDB } from './config/db.js';
 
 dotenv.config();
+
+connectDB();
 
 const app: Express = express();
 
