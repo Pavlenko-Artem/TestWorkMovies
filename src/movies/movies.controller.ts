@@ -1,3 +1,4 @@
+import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Movie from '../models/movies.model.js';
 
@@ -5,29 +6,31 @@ import Movie from '../models/movies.model.js';
 // @route    GET /api/movies
 // @access   Public
 
-export const getMovies = async (req: Request, res: Response) => {
+export const getMovies = asyncHandler(async (req: Request, res: Response) => {
   const movies = await Movie.find();
 
   res.json(movies);
-};
+});
 
 // @desc     Create new movies
 // @route    POST /api/moviesshelf/movie
 // @access   Public
 
-export const createNewMovies = async (req: Request, res: Response) => {
-  const { title, type, directors, genres, countries, year, description } =
-    req.body;
+export const createNewMovies = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { title, type, directors, genres, countries, year, description } =
+      req.body;
 
-  const movie = await Movie.create({
-    title,
-    type,
-    directors,
-    genres,
-    countries,
-    year,
-    description
-  });
+    const movie = await Movie.create({
+      title,
+      type,
+      directors,
+      genres,
+      countries,
+      year,
+      description
+    });
 
-  res.json({ movie });
-};
+    res.json({ movie });
+  }
+);
