@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import Movie from '../models/movies.model.js';
+import Movie, { IMovie } from '../models/movies.model.js';
 
 // @desc     Get movies
 // @route    GET /api/movies
@@ -15,11 +15,27 @@ export const getMovies = asyncHandler(async (req: Request, res: Response) => {
 // @desc     Create new movies
 // @route    POST /api/moviesshelf/movie
 // @access   Public
+const enum Types {
+  movie = 'movie',
+  tvSeries = 'tvSeries'
+}
 
 export const createNewMovies = asyncHandler(
   async (req: Request, res: Response) => {
-    const { title, type, directors, genres, countries, year, description } =
-      req.body;
+    const {
+      title,
+      type,
+      directors,
+      genres,
+      countries,
+      year,
+      description
+    }: IMovie = req.body;
+
+    if (type !== Types.movie && type !== Types.tvSeries) {
+      res.status(400);
+      throw new Error('Плохой запрос');
+    }
 
     const movie = await Movie.create({
       title,
