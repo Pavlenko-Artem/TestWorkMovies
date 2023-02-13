@@ -50,3 +50,20 @@ export const createNewMovies = asyncHandler(
     res.json({ movie });
   }
 );
+
+// @desc     Create new movies
+// @route    POST /api/moviesshelf/search/:title
+// @access   Public
+
+export const findMovies = asyncHandler(async (req: Request, res: Response) => {
+  const movies = await Movie.find({
+    title: req.params.title
+  });
+
+  if (movies.length === 0) {
+    res.status(400);
+    throw new Error('The movie was not found');
+  }
+
+  res.json({ movies });
+});
