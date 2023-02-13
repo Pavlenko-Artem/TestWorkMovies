@@ -34,7 +34,7 @@ export const createNewMovies = asyncHandler(
 
     if (type !== Types.movie && type !== Types.tvSeries) {
       res.status(400);
-      throw new Error('Плохой запрос');
+      throw new Error('The movie type should be movie or tvSeries');
     }
 
     const movie = await Movie.create({
