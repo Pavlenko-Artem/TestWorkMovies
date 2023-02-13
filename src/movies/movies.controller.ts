@@ -57,7 +57,7 @@ export const createNewMovies = asyncHandler(
 
 export const findMovies = asyncHandler(async (req: Request, res: Response) => {
   const movies = await Movie.find({
-    title: req.params.title
+    title: { $regex: req.params.title, $options: 'i' }
   });
 
   if (movies.length === 0) {
