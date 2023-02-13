@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import Movie, { IMovie } from '../models/movies.model.js';
+import { valiidateMovieData } from '../utils/validation.js';
 
 // @desc     Get movies
 // @route    GET /api/movies
@@ -22,6 +23,13 @@ const enum Types {
 
 export const createNewMovies = asyncHandler(
   async (req: Request, res: Response) => {
+    const valid = valiidateMovieData(req.body);
+
+    if (valid.error) {
+      res.status(400);
+      throw new Error(`${valid.error.message}`);
+    }
+
     const {
       title,
       type,
