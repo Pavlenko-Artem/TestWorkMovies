@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import Movie from '../models/movies.model.js';
+import Movie, { IMovie } from '../models/movies.model.js';
+import { valiidateMovieData } from '../utils/validation.js';
 
 // @desc     Get movies
 // @route    GET /api/movies
@@ -15,11 +16,34 @@ export const getMovies = asyncHandler(async (req: Request, res: Response) => {
 // @desc     Create new movies
 // @route    POST /api/moviesshelf/movie
 // @access   Public
+const enum Types {
+  movie = 'movie',
+  tvSeries = 'tvSeries'
+}
 
 export const createNewMovies = asyncHandler(
   async (req: Request, res: Response) => {
-    const { title, type, directors, genres, countries, year, description } =
-      req.body;
+    const valid = valiidateMovieData(req.body);
+
+    if (valid.error) {
+      res.status(400);
+      throw new Error(`${valid.error.message}`);
+    }
+
+    const {
+      title,
+      type,
+      directors,
+      genres,
+      countries,
+      year,
+      description
+    }: IMovie = req.body;
+
+    if (type !== Types.movie && type !== Types.tvSeries) {
+      res.status(400);
+      throw new Error('The movie type should be movie or tvSeries');
+    }
 
     const movie = await Movie.create({
       title,
@@ -34,3 +58,20 @@ export const createNewMovies = asyncHandler(
     res.json({ movie });
   }
 );
+
+// @desc     Create new movies
+// @route    POST /api/moviesshelf/search/:title
+// @access   Public
+
+export const findMovies = asyncHandler(async (req: Request, res: Response) => {
+  const movies = await Movie.find({
+    title: { $regex: req.params.title, $options: 'i' }
+  });
+
+  if (movies.length === 0) {
+    res.status(400);
+    throw new Error('The movie was not found');
+  }
+
+  res.json({ movies });
+});

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-interface IMovie {
+export interface IMovie {
   title: string;
   type: 'movie' | 'tvSeries';
   directors: string[];
